@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities - WellnessTracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 20px;
+        }
+
+        .activities-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 600px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control:hover {
+            border-color: #d1d5db;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .activity-item {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .activity-item:hover::before {
+            opacity: 1;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .activity-type {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activity-emoji {
+            font-size: 1.5rem;
+        }
+
+        .activity-date {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .activity-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .activity-notes {
+            color: #64748b;
+            font-style: italic;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            color: #64748b;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .form-card {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .activity-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header fade-in">
+            <h1>🏃‍♂️ Activity Tracking</h1>
+            <p>Log your workouts and track your fitness journey</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="main-grid">
+            <div class="form-card fade-in">
+                <h3 class="card-title">
+                    <div class="icon">➕</div>
+                    Log New Activity
+                </h3>
+                
+                <form id="activityForm">
+                    <div class="form-group">
+                        <label class="form-label" for="activityType">Activity Type</label>
+                        <select id="activityType" name="activityType" class="form-control" required>
+                            <option value="">Choose your activity</option>
+                            <option value="running">🏃 Running</option>
+                            <option value="walking">🚶 Walking</option>
+                            <option value="cycling">🚴 Cycling</option>
+                            <option value="swimming">🏊 Swimming</option>
+                            <option value="gym">💪 Gym Workout</option>
+                            <option value="yoga">🧘 Yoga</option>
+                            <option value="basketball">🏀 Basketball</option>
+                            <option value="tennis">🎾 Tennis</option>
+                            <option value="hiking">🥾 Hiking</option>
+                            <option value="other">⚡ Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="duration">Duration (minutes)</label>
+                        <input type="number" id="duration" name="duration" class="form-control" min="1" max="600" required placeholder="e.g., 30">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="caloriesBurned">Calories Burned (optional)</label>
+                        <input type="number" id="caloriesBurned" name="caloriesBurned" class="form-control" min="0" max="2000" placeholder="e.g., 250">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="notes">Notes (optional)</label>
+                        <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="How did it feel? Any observations?"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        Log Activity
+                    </button>
+                </form>
+            </div>
+
+            <div class="activities-card fade-in">
+                <h3 class="card-title">
+                    <div class="icon">📋</div>
+                    Recent Activities
+                </h3>
+                
+                <div id="activitiesList" class="loading">
+                    <div class="spinner"></div>
+                    Loading your activities...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const activityEmojis = {
+            'running': '🏃',
+            'walking': '🚶',
+            'cycling': '🚴',
+            'swimming': '🏊',
+            'gym': '💪',
+            'yoga': '🧘',
+            'basketball': '🏀',
+            'tennis': '🎾',
+            'hiking': '🥾',
+            'other': '⚡'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add staggered animation delays
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.2}s`;
+            });
+            
+            loadActivities();
+        });
+
+        document.getElementById('activityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const activityData = {
+                activity_type: formData.get('activityType'),
+                duration: parseInt(formData.get('duration')),
+                notes: formData.get('notes') || null
+            };
+            
+            const calories = formData.get('caloriesBurned');
+            if (calories) {
+                activityData.calories_burned = parseInt(calories);
+            }
+            
+            // Add loading state to button
+            const submitBtn = e.target.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Logging...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                showAlert('Activity logged successfully! 🎉', 'success');
+                e.target.reset();
+                loadActivities();
+                
+                // Restore button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 1000);
+            
+            // Uncomment for real API call
+            /*
+            fetch('/api/activities', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(activityData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Activity logged successfully') {
+                    showAlert('Activity logged successfully! 🎉', 'success');
+                    e.target.reset();
+                    loadActivities();
+                } else {
+                    showAlert(data.error || 'Failed to log activity', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Failed to log activity. Please try again.', 'error');
+            })
+            .finally(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+            */
+        });
+
+        function loadActivities() {
+            // Simulate loading with demo data
+            setTimeout(() => {
+                const demoActivities = [
+                    {
+                        activity_type: 'running',
+                        duration: 30,
+                        calories_burned: 300,
+                        date: '2025-05-29',
+                        notes: 'Great morning run! Felt energized throughout.'
+                    },
+                    {
+                        activity_type: 'yoga',
+                        duration: 45,
+                        calories_burned: 150,
+                        date: '2025-05-28',
+                        notes: 'Relaxing session focusing on flexibility.'
+                    },
+                    {
+                        activity_type: 'cycling',
+                        duration: 60,
+                        calories_burned: 450,
+                        date: '2025-05-27',
+                        notes: null
+                    },
+                    {
+                        activity_type: 'gym',
+                        duration: 75,
+                        calories_burned: 400,
+                        date: '2025-05-26',
+                        notes: 'Focused on upper body strength training.'
+                    },
+                    {
+                        activity_type: 'swimming',
+                        duration: 40,
+                        calories_burned: 350,
+                        date: '2025-05-25',
+                        notes: 'Pool workout - did 20 laps freestyle.'
+                    }
+                ];
+                
+                displayActivities({ activities: demoActivities });
+            }, 1000);
+            
+            // Uncomment for real API call
+            /*
+            fetch('/api/activities?limit=20')
+                .then(response => response.json())
+                .then(data => displayActivities(data))
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('activitiesList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">⚠️</div>
+                            <h3>Failed to load activities</h3>
+                            <p>Please try refreshing the page.</p>
+                        </div>
+                    `;
+                });
+            */
+        }
+
+        function displayActivities(data) {
+            const activitiesDiv = document.getElementById('activitiesList');
+            
+            if (data.activities.length === 0) {
+                activitiesDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🏃</div>
+                        <h3>No activities yet</h3>
+                        <p>Start logging your workouts to see them here!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            data.activities.forEach((activity, index) => {
+                const emoji = activityEmojis[activity.activity_type] || '⚡';
+                const activityName = activity.activity_type.charAt(0).toUpperCase() + activity.activity_type.slice(1);
+                
+                html += `
+                    <div class="activity-item" style="animation-delay: ${index * 0.1}s">
+                        <div class="activity-header">
+                            <div class="activity-type">
+                                <span class="activity-emoji">${emoji}</span>
+                                ${activityName}
+                            </div>
+                            <div class="activity-date">${formatDate(activity.date)}</div>
+                        </div>
+                        <div class="activity-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${activity.duration}</div>
+                                <div class="stat-label">Minutes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${activity.calories_burned || 0}</div>
+                                <div class="stat-label">Calories</div>
+                            </div>
+                        </div>
+                        ${activity.notes ? `<div class="activity-notes">"${activity.notes}"</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            activitiesDiv.innerHTML = html;
+            
+            // Add fade-in animation to new items
+            activitiesDiv.querySelectorAll('.activity-item').forEach(item => {
+                item.classList.add('fade-in');
+            });
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            alertContainer.appendChild(alert);
+            
+            // Fade in
+            setTimeout(() => alert.style.opacity = '1', 10);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }, 4000);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) {
+                return 'Today';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            } else {
+                return date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
+                });
+            }
+        }
+    </script>
+</body>
+</html>
