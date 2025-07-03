@@ -1,20 +1,45 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register - MedTrack</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form method="POST">
-        Role:
-        <select name="role">
-            <option value="doctor">Doctor</option>
-            <option value="patient">Patient</option>
-        </select><br>
-        Username: <input type="text" name="username" required><br>
-        Password: <input type="password" name="password" required><br>
-        <button type="submit">Register</button>
-    </form>
-    <p>Already registered? <a href="/login">Login here</a></p>
-</body>
-</html>
+<form method="POST">
+  <label>Name:</label>
+  <input type="text" name="name" required><br>
+
+  <label>Email:</label>
+  <input type="email" name="email" required><br>
+
+  <label>Password:</label>
+  <input type="password" name="password" required><br>
+
+  <label>Role:</label>
+  <select name="role" required>
+    <option value="patient">Patient</option>
+    <option value="doctor">Doctor</option>
+  </select><br>
+
+  <label>Age:</label>
+  <input type="number" name="age" required><br>
+
+  <label>Gender:</label>
+  <select name="gender" required>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+  </select><br>
+
+  <div id="specialization-field" style="display:none;">
+    <label>Specialization:</label>
+    <input type="text" name="specialization">
+  </div>
+
+  <button type="submit">Register</button>
+</form>
+
+<script>
+  // Show specialization only if role is doctor
+  document.querySelector('select[name="role"]').addEventListener('change', function () {
+    const specField = document.getElementById('specialization-field');
+    if (this.value === 'doctor') {
+      specField.style.display = 'block';
+    } else {
+      specField.style.display = 'none';
+    }
+  });
+</script>
