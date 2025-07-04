@@ -41,7 +41,8 @@ def send_email(to_email, subject, body):
         server.sendmail(SENDER_EMAIL, to_email, msg.as_string())
         server.quit()
     except Exception as e:
-        print(f"Email error: {e}")
+        print("Email error: {}".format(e))
+
 
 # ---------------- ROUTES ----------------
 @app.route('/')
