@@ -7,7 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 app = Flask(_name_)
-app.secret_key = 'your-secret-key'
+
 
 # ---------------- AWS CONFIG ----------------
 REGION = 'us-east-1'
